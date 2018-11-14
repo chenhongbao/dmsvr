@@ -1,4 +1,4 @@
-package com.dm.svr;
+package dmkp.dm.svr;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,11 +22,11 @@ import org.json.JSONObject;
 
 import com.Common;
 import com.Result;
-import com.dm.svr.data.DanmuDisplay2;
 import com.logging.JSONSocketHandler;
 import com.net.TcpPoint;
 
-import dmkp.dm.data.DanmuText.Danmu;
+import dmkp.dm.svr.data.DanmuDisplay2;
+import dmkp.dm.svr.data.DanmuDisplay2.Danmu2;
 
 public class DanmuServer implements Runnable {
 	
@@ -41,26 +40,26 @@ public class DanmuServer implements Runnable {
 	
 	class SyncList {
 		public SyncList() {
-			_dm = new LinkedList<Danmu>();
+			_dm = new LinkedList<Danmu2>();
 			_lock = new ReentrantReadWriteLock();
 		}
 		
-		public void AddDanmu(Danmu d) {
+		public void AddDanmu(Danmu2 d) {
 			_lock.writeLock().lock();
 			_dm.add(d);
 			_lock.writeLock().unlock();
 		}
 		
-		public List<Danmu> PopDanmu() {
-			List<Danmu> tmp = _dm;
+		public List<Danmu2> PopDanmu() {
+			List<Danmu2> tmp = _dm;
 			_lock.writeLock().lock();
-			_dm = new LinkedList<Danmu>();
+			_dm = new LinkedList<Danmu2>();
 			_lock.writeLock().unlock();
 			return tmp;
 		}
 		
 		private ReentrantReadWriteLock _lock;
-		private List<Danmu> _dm;
+		private List<Danmu2> _dm;
 	}
 	
 	/*日志对象*/
@@ -93,7 +92,7 @@ public class DanmuServer implements Runnable {
 					keys.addAll(_danmuCache.keySet());
 					_lock.readLock().unlock();
 					for (String k : keys) {
-						List<Danmu> l = _danmuCache.get(k).PopDanmu();
+						List<Danmu2> l = _danmuCache.get(k).PopDanmu();
 						if (l.size() < 1) {
 							continue;
 						}
@@ -113,7 +112,7 @@ public class DanmuServer implements Runnable {
 	public void run() {
 		int port = 0;
 		DatagramSocket ss = null;
-        byte[] receiveData = new byte[1500], sendData = new byte[1500];
+        byte[] receiveData = new byte[1500];
 		try {
 			JSONObject o = Common.LoadJSONObject(this.getClass().getResourceAsStream("dm_listen.json"));
 			port = o.getInt("Port");
@@ -127,7 +126,7 @@ public class DanmuServer implements Runnable {
             try {
             	DatagramPacket rp = new DatagramPacket(receiveData, receiveData.length);
 				ss.receive(rp);
-				Danmu d = Danmu.Parse(new JSONObject(
+				Danmu2 d = Danmu2.Parse(new JSONObject(
 						new String(rp.getData(), Charset.forName("UTF-8"))));
 				_lock.readLock().lock();
 				SyncList b = _danmuCache.get(d.InstrumentID);
@@ -148,10 +147,10 @@ public class DanmuServer implements Runnable {
 		}
 	}
 	
-	private void _BroadcastDanmu(String InstrumentID, List<Danmu> danmus) {
+	private void _BroadcastDanmu(String InstrumentID, List<Danmu2> danmus) {
 		DanmuDisplay2 dis = new DanmuDisplay2();
 		dis.InstrumentID = InstrumentID;
-		for (Danmu d :danmus) {
+		for (Danmu2 d :danmus) {
 			dis.AddDanmu(d);
 		}
 		byte[] bytes = dis.ToJSON().toString(-1).getBytes(Charset.forName("UTF-8"));
