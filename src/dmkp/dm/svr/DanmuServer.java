@@ -11,8 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
@@ -86,9 +84,6 @@ public class DanmuServer {
 	/* 日志对象 */
 	static Logger LOG;
 
-	/* 线程池 */
-	ExecutorService _es;
-
 	/* 保存客户端连接信息 */
 	List<ClientInfo> _clients;
 
@@ -98,12 +93,11 @@ public class DanmuServer {
 
 	public DanmuServer() {
 		_lock = new ReentrantReadWriteLock();
-		_es = Executors.newCachedThreadPool();
 		_clients = new LinkedList<ClientInfo>();
 		_danmuCache = new HashMap<String, SyncList>();
 		_InitLogger();
 		_LoadClientInfo();
-		_es.execute(new Runnable() {
+		Common.GetSingletonExecSvc().execute(new Runnable() {
 			@Override
 			public void run() {
 				while (true) {
