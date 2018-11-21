@@ -18,7 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import dmkp.common.net.Duplex;
+import dmkp.common.net.SocketDuplex;
 import dmkp.common.util.Common;
 import dmkp.common.util.Result;
 import dmkp.dm.svr.data.DanmuDisplay2;
@@ -33,10 +33,10 @@ public class DanmuServer {
 
 		public String IP;
 		public int Port;
-		public Duplex TCP;
+		public SocketDuplex TCP;
 	}
 	
-	class DanmuDuplex extends Duplex {
+	class DanmuDuplex extends SocketDuplex {
 		public DanmuDuplex() {}
 		
 		@Override
