@@ -167,7 +167,7 @@ public class DanmuServer {
 	}
 	
 	private void _InitLogger() {
-		JSONObject obj = Common.LoadJSONObject(this.getClass().getResource("dmlog_addr.json").getFile());
+		JSONObject obj = Common.LoadJSONObject(this.getClass().getResourceAsStream("dmlog_addr.json"));
 		if (obj != null && obj.has("IP") && obj.has("Port")) {
 			int port = 0;
 			String ip = null;
