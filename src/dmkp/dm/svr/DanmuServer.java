@@ -180,6 +180,7 @@ public class DanmuServer {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public void Accept() {
 		int port = 0;
 		DatagramSocket ss = null;
