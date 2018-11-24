@@ -16,9 +16,19 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>com_src</name>
+			<type>2</type>
+			<location>D:/Workspace/oepe/dmkp_common/src</location>
+		</link>
+		<link>
 			<name>dmkp_src</name>
 			<type>2</type>
 			<location>D:/Workspace/oepe/dmkp/src</location>
+		</link>
+		<link>
+			<name>log_src</name>
+			<type>2</type>
+			<location>D:/Workspace/oepe/logsvr/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>
