@@ -3,6 +3,7 @@ package dmkp.dm.svr;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -41,6 +42,9 @@ public class DanmuServer {
 		
 		@Override
 		public void OnConnect() {
+			// 设置线程名称
+			InetSocketAddress addr = (InetSocketAddress)this.GetSocketAddress();
+			Thread.currentThread().setName("Danmu client session (" + addr.getHostString() + ":" + addr.getPort() + ")");
 		}
 
 		@Override
@@ -100,6 +104,9 @@ public class DanmuServer {
 		Common.GetSingletonExecSvc().execute(new Runnable() {
 			@Override
 			public void run() {
+				// 设置线程名称
+				Thread.currentThread().setName("Danmu server broadcaster");
+				
 				while (true) {
 					_lock.readLock().lock();
 					/* 因为_danmuCache不会删除key，所以根据key来获得数据不会引起异常，能提高并发性 */
