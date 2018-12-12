@@ -24,7 +24,7 @@ import dmkp.common.util.Common;
 import dmkp.common.util.Result;
 import dmkp.dm.svr.data.DanmuDisplay2;
 import dmkp.dm.svr.data.DanmuDisplay2.Danmu2;
-import dmkp.logging.logger.SocketLoggerFactory;
+import flyingbot.data.log.SocketLoggerFactory;
 
 public class DanmuServer {
 
